@@ -4,49 +4,70 @@
 		<HdTitle :title="'购物车'"></HdTitle>
 
 		<!-- 购物车不为空，显示商品数据 -->
-		<div class="gq-cart-shops">
+		<div class="gq-cart-shops" v-if="!isEmpty">
 			<!-- 有效商品 -->
 			<div class="gq-cart-shops-valid">
 				<!-- 一家店铺的商品 -->
-				<div class="gq-cart-shops-valid-store">
+				<div
+					v-for="shopItem in cartList"
+					:key="shopItem.shopId"
+					class="gq-cart-shops-valid-store"
+				>
 					<div class="gq-cart-shops-valid-store_name">
 						<span
-            @click="toggleCheckedById"
-            :class="['circle']"
+            @click="toggleCheckedByShop(shopItem.shopId)"
+            :class="['circle', shopItem.shopChecked ? 'checked': '']"
             ></span>
-            <font>翰代维旗舰店</font>
-            <i class="gq-icon">&#xe61a;</i>
-            <i>确定</i>
+            <font>{{shopItem.shopName}}</font>
+            <i
+	            @click="toggleShopEditByShopId({boolType: false, shopId: shopItem.shopId})"
+	            v-if="shopItem.shopEdit"
+	          >确定</i>
+            <i
+	            @click="toggleShopEditByShopId({boolType: true, shopId: shopItem.shopId})"
+	            v-else class="gq-icon"
+	          >&#xe61a;</i>
 					</div>
           <ul class="gq-cart-shops-valid-store-shoplist">
-            <li class="gq-cart-shops-valid-store-shoplist-item">
+          	<!-- 店铺下面的商品列表 -->
+            <li
+	            v-for="item in shopItem.shopList"
+	            :key="item.id"
+	            class="gq-cart-shops-valid-store-shoplist-item"
+	          >
               <div class="gq-cart-shops-valid-store-shoplist-item_checkbox">
                 <span
-                  @click="toggleCheckedByStore"
-                  :class="['circle']"
-                  ></span>
+                  @click="toggleCheckedById({shopId: item.shopId, id: item.id})"
+                  :class="['circle', item.checked ? 'checked': '']"
+                ></span>
               </div>
-              <div class="gq-cart-shops-valid-store-shoplist-item_img">
-                <img src="https://s11.mogucdn.com/mlcdn/c45406/190619_392k5j0ehac9hh7j228kiaidd91b8_640x960.jpg_220x330.webp">
-              </div>
-              <div class="gq-cart-shops-valid-store-shoplist-item_info">
-                <h5>翰代维超火裤子女夏季2019新品赛车哈伦裤撞色拼接束脚休闲裤</h5>
-                <p>颜色：83K006白色；尺码：M；</p>
+              <router-link to="/detail" class="gq-cart-shops-valid-store-shoplist-item_img">
+                <img :src="item.img">
+              </router-link>
+              <div v-if="!shopItem.shopEdit" class="gq-cart-shops-valid-store-shoplist-item_info">
+                <router-link tag="h5" to="/detail">{{item.title}}</router-link>
+                <p>{{item.cartType1}}：{{item.cartType1Val}}；{{item.cartType2}}：{{item.cartType2Val}}</p>
                 <div class="gq-cart-shops-valid-store-shoplist-item_info_params">
-                  <span>￥88.00</span>
-                  <span>￥126.00</span>
-                  <font>x2</font>
+                  <span>￥{{item.price | tofix2}}</span>
+                  <span>￥{{item.originPrice | tofix2}}</span>
+                  <font>x {{item.num}}</font>
                 </div>
               </div>
 
-              <div class="gq-cart-shops-valid-store-shoplist-item_sele">
+              <div v-else class="gq-cart-shops-valid-store-shoplist-item_sele">
               	<div class="gq-cart-shops-valid-store-shoplist-item_sele_num">
-                	<span>-</span>
-                	<font>1</font>
-                	<span>+</span>
+                	<span @click="editNumById({
+                		shopId: item.shopId,
+                		id: item.id,
+                		num: -1})">-</span>
+                	<font>{{item.num}}</font>
+                	<span @click="editNumById({
+                		shopId: item.shopId,
+                		id: item.id,
+                		num: 1})">+</span>
                 </div>
                 <div class="gq-cart-shops-valid-store-shoplist-item_sele_params">
-                	<span>颜色：83K006白色；尺码：M；</span>
+                	<span>{{item.cartType1}}：{{item.cartType1Val}}；{{item.cartType2}}：{{item.cartType2Val}}</span>
                 	<i class="gq-icon">&#xe6b4;</i>
                 </div>
               </div>
@@ -58,20 +79,33 @@
 		</div>
 
 		<!-- 购物车为空时，显示空 -->
-		<div class="gq-cart-footer">
+		<div class="gq-cart-emptyCart" v-if="isEmpty">
+			<img src="https://s10.mogucdn.com/mlcdn/c45406/180704_3ac3b297lghla2jjdhe23d5jfgddf_1500x1170.png">
+			<p>你的购物车空空如也</p>
+			<router-link
+			to="/"
+			tag="div"
+			class="gq-cart-emptyCart_btn">去逛逛</router-link>
+		</div>
+
+		<!-- 购物车底部 -->
+		<div class="gq-cart-footer" v-if="!isEmpty">
 			<label class="gq-cart-footer_check">
 				<input type="checkbox" name="">
 				<span
-        @click="toggleAllChecked"
-        :class="['circle', allCheck ? 'checked': '']"
+	        :class="['circle', allCheck ? 'checked': '']"
+	        @click="toggleAllChecked(!allCheck)"
         ></span>
-				<font>全选(0)</font>
+				<font>全选({{totalCheckedNum}})</font>
 			</label>
-			<div class="gq-cart-footer_tittleprice">￥99.99</div>
-			<a href="javascript:;" class="gq-cart-footer_btn">去结算</a>
+			<div class="gq-cart-footer_tittleprice">￥{{totalCheckedMoney | tofix2}}</div>
+			<div class="gq-cart-footer_btn" v-if='!isEdit'><span>去结算</span></div>
+			<div class="gq-cart-footer_btn" v-else>
+				<font>移入收藏夹</font>
+				<span @click="delCheckedShop">删除</span>
+			</div>
 		</div>
 	</div>
-	
 </template>
 
 <script>
@@ -85,23 +119,36 @@
 	export default {
 		data () {
 			return {
-				cartList: []
 			}
 		},
-    computed: {
+		computed: {
       ...mapState([
-        'allCheck'
+      	'cartList'
+      ]),
+      ...mapGetters([
+      	'isEmpty',
+      	'allCheck',
+      	'isEdit',
+      	'totalCheckedNum',
+      	'totalCheckedMoney'
       ])
+    },
+    mounted () {
+    	// 渲染期间可以获取computed的数据，在created期间获取不到
+    	// console.log(this.cartList)
     },
 		components: {
 			HdTitle
 		},
     methods: {
       ...mapMutations([
-          'toggleAllChecked',
-          'toggleCheckedById',
-          'toggleCheckedByStore'
-        ])
+        'toggleAllChecked',
+        'toggleCheckedById',
+        'toggleCheckedByShop',
+        'toggleShopEditByShopId',
+        'editNumById',
+        'delCheckedShop'
+      ])
     }
 	}
 </script>
@@ -137,14 +184,14 @@
 		display: flex;
 		height: 100%;
 		flex-direction: column;
+		background-color: #f1f1f1;
 		&-shops{
 			flex: 1;
 			overflow: auto;
-			background-color: #f1f1f1;
 			&-valid{
 				overflow: hidden;
 				&-store{
-					margin-top: 15px;
+					margin-top: 12px;
 					background-color: #fff;
 					&_name{
 						padding: 8px 15px;
@@ -178,7 +225,6 @@
 								}
 							}
 							&_info{
-								display: none;
 								flex: 1;
 								h5{
 									font-size: 12px;
@@ -223,6 +269,7 @@
 									span{
 										display: inline-block;
 										width: 40px;
+										font-size: 20px;
 										line-height: 28px;
 										text-align: center;
 									}
@@ -255,6 +302,37 @@
 			}
 		}
 
+		&-emptyCart{
+			height: 260px;
+			overflow: hidden;
+			position: relative;
+			background-color: #fff;
+			img{
+				width: 100%;
+				margin-top: -50px;
+			}
+			p{
+				font-size: 12px;
+				color: #5e5e5e;
+				text-align: center;
+				margin-top: -66px;
+			}
+			&_btn{
+				width: 100px;
+				height: 34px;
+				line-height: 34px;
+				text-align: center;
+				margin: 0 auto;
+				background-color: #ff5777;
+				color: #fff;
+				position: absolute;
+				bottom: 20px;
+				left: 50%;
+				margin-left: -50px;
+				border-radius: 5px;
+			}
+		}
+
 		&-footer{
 			background-color: #fff;
 			border-top: 1px solid #d8d8d8;
@@ -277,15 +355,28 @@
 			&_btn{
 				display: inline-block;
 				float: right;
-				width: 100px;
-				height: 34px;
-				line-height: 34px;
-				text-align: center;
-				border-radius: 5px;
-				text-decoration: none;
-				letter-spacing: 1px;
-				color: #fff;
-				background-color: #ff5777;
+				height: 30px;
+				
+				span{
+					display: inline-block;
+					padding: 0 20px;
+					width: auto;
+					line-height: 30px;
+					background-color: #ff5777;
+					color: #fff;
+					border-radius: 5px;
+					letter-spacing: 1px;
+				}
+				font{
+					display: inline-block;
+					margin-right: 10px;
+					line-height: 28px;
+					padding: 0 10px;
+					width: auto;
+					border-radius: 5px;
+					border: 1px solid #ff5777;
+					color: #ff5777;
+				}
 			}
 		}
 	}

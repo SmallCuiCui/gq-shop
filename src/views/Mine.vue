@@ -41,7 +41,7 @@
   			>
   				<i class="gq-icon">&#xe601;</i>
   				<span>购物车</span>
-  				<font><i class="gq-icon">&#xe608;</i></font>
+  				<font>{{cartCmdNum}}<i class="gq-icon">&#xe608;</i></font>
   			</router-link>
   			<li class="gq-mine-section_ul_li">
   				<i class="gq-icon">&#xe600;</i>
@@ -72,13 +72,34 @@
   				<font><i class="gq-icon">&#xe608;</i></font>
   			</li>
   		</ul>
+
+  		<div @click="logout" class="gq-mine-section_logout">
+	  		<span>退出登录</span>
+	  	</div>
   	</div>
+
+  	
   </div>
 </template>
 
 <script>
+	import { mapGetters, mapMutations } from 'vuex'
 export default {
-
+	computed: {
+		...mapGetters(['cartCmdNum'])
+	},
+	methods: {
+		...mapMutations(['toggleUserInfo']),
+		logout () {
+			this.toggleUserInfo({})
+			const instance = this.$toast('退出登录成功');
+			setTimeout(function(args) {
+				// this.$router.push('/home')
+				instance.close()
+			},500)
+			this.$router.push('/home')
+		}
+	}
 }
 </script>
 
@@ -101,7 +122,7 @@ export default {
 			position: absolute;
 			border-radius: 5px;
 			bottom: 0;
-			box-shadow: 0 0 5px rgba(0, 0, 0, .12);
+			box-shadow: 0 5px 5px rgba(0, 0, 0, .06);
 			background-color: #fff;
 			&_box{
 				margin: 0 auto;
@@ -149,7 +170,7 @@ export default {
 		}
 	}
 	&-section{
-		background-color: #f1f1f1;
+		background-color: #f6f6f6;
 		flex: 1;
 		overflow: auto;
 		&_ul{
@@ -172,14 +193,27 @@ export default {
 				}
 				font{
 					float: right;
+					color: #999;
+					font-size: 13px;
 					i{
-						color: #999;
-						// font-size: 13px;
+						font-size: 15px;
+						margin-left: 8px;
 					}
 				}
 			}
 		}
+		&_logout{
+			width: 85%;
+			height: 40px;
+			line-height: 40px;
+			color: #fff;
+			background-color: #ff5777;
+			text-align: center;
+			margin: 15px auto;
+			border-radius: 3px;
+		}
 	}
+
 }
 
 </style>

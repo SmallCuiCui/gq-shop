@@ -53,7 +53,7 @@
 			isLogin (value) {
 				// 检测登录状态，如果登录成功则跳转回购物车页面/或者个人主页
 				if (value) {
-					let instance = this.$toast('登录成功！跳转至首页');
+					let instance = this.$toast('登录成功！');
 					setTimeout(() => {
 						instance.close()
 						const { from } = this.$route.params

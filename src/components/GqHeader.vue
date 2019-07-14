@@ -1,11 +1,7 @@
 <template>
   <div class="gq-header">
     <div class="gq-header-wrap">
-      <router-link
-      tag="i"
-      to="/list"
-      class="gq-icon gq-header-wrap-icon"
-      >&#xe606;</router-link>
+      <i @click="goBack" class="gq-icon gq-header-wrap-icon">&#xe606;</i>
 
       <router-link
       tag="form"
@@ -24,12 +20,7 @@
 
 <script>
 export default {
-data () {
-  return {
-  }
-},
-methods: {
-}
+  
 }
 </script>
 

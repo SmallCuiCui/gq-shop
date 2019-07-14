@@ -32,8 +32,7 @@ export const getList = () => ajax.get('/jsonp/multiget/3?appPlat=m&pids=117330')
 export const getListData = (id) => ajax.get(`/jsonp/get/3?pid=${id}`)
 // 获取某一个分类下面的商品数据
 export const getShopList = (obj) => ajax.get(`/search?_version=8253&ratio=3%3A4&cKey=16&sort=${obj.sort}&page=${obj.page}&q=${obj.q}&offset=${obj.offset}&ad=0&fcid=${obj.fcid}&action=shopping&title=${obj.title}&acm=${obj.acm}&minPrice=${obj.minPrice}&maxPrice=${obj.maxPrice}`)
-
-export const getDetail = () => ajax.get(`http://rap2api.taobao.org/app/mock/224117/detail-info`)
-
-// 请求登录接口
-export const postLogin = ({ username, password }) => ajax.post('http://rap2api.taobao.org/app/mock/166390/user', { username, password })
+// 请求详情页数据
+export const getDetail = () => ajax.get(`http://rap2api.taobao.org/app/mock/166390/deatil-info`)
+// 请求用户登录接口
+export const postLogin = ({username, password}) => ajax.post('http://rap2api.taobao.org/app/mock/166390/user', { username, password })

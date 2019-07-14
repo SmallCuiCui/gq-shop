@@ -58,7 +58,6 @@ router.beforeEach((to, from, next) => {
 	// 判断是否登录，进入购物车以及进入个人页面需要进行登录验证
 	if (to.meta.isAuthRequired === true) {
 		// 需要进行登录验证
-		console.log(store)
 		if (store.getters.isLogin === true){
 			// 已登录状态
 			next()
@@ -85,7 +84,7 @@ router.beforeEach((to, from, next) => {
 })
 
 new Vue({
-	store,
 	router,
+	store,
 	render: h => h(App)
 }).$mount('#app')

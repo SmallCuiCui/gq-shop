@@ -20,7 +20,7 @@
         v-for="item in cateList"
         :key="item.sort"
         class="gq-home-cate-item"
-        :to="{name:'listdtail',params: {headerTitle: item.title, link: item.link}}"
+        :to="{name:'listdtail',query: {headerTitle: item.title},params: {headerTitle: item.title, link: item.link}}"
         >
         <div class="gq-home-cate-item_img">
           <img :src="item.image">

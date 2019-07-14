@@ -125,9 +125,7 @@ export default {
         minPrice,
         maxPrice
       }
-      console.log(obj)
       this.$http.getShopList(obj).then(resp => {
-        console.log(resp)
         if (resp.result.priceFilter) {
           this.priceList = resp.result.priceFilter
         }

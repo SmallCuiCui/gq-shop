@@ -1,13 +1,8 @@
 <template>
 	<div class="gq-header">
 		<div class="gq-header-wrap">
-			<router-link
-			tag="i"
-			to="/list"
-			class="gq-icon gq-header-wrap-icon"
-			@click="goback"
-			>&#xe603;</router-link>
-			<h1 class="gq-header-wrap-title">{{title}}</h1>
+			<i class="gq-icon gq-header-wrap-icon" @click="goback">&#xe603;</i>
+			<h1 class="gq-header-wrap-title">{{title}}<span>{{showNum}}</span></h1>
 			<router-link
 			tag="i"
 			to="/cart"
@@ -18,13 +13,23 @@
 </template>
 
 <script>
+	import { mapGetters } from 'vuex'
 	export default {
 		data () {
 			return {
+				iscart: true
 			}
 		},
 		props: ['title', 'hasCart'],
-		created () {
+		computed: {
+			...mapGetters(['cartCmdNum']),
+			showNum () {
+				if (!(this.$route.path === '/cart')) {
+					return ''
+				} else {
+					return '(' + this.cartCmdNum +')'
+				}
+			}
 		},
 		methods: {
 			goback () {
@@ -46,7 +51,7 @@ $activeColor: rgb(255, 87, 119);
 	background-color: #fff;
 	&-wrap{
 		position: absolute;
-		top: 10px;
+		top: 7px;
 		left: 0;
 		height: 30px;
 		width: 100%;
@@ -64,7 +69,9 @@ $activeColor: rgb(255, 87, 119);
 			line-height: 30px;
 			text-align: center;
 			font-size: 18px;
-			// font-weight: 600;
+			font-family: Arail;
+			color: #5e5e5e;
+			font-weight: 400;
 			flex: 1;
 		}
 	}

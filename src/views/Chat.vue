@@ -5,7 +5,7 @@
         <i
         class="gq-icon mg-chat-header-wrap-icon"
         @click="goBack"
-        >&#xe616;</i>
+        >&#xe603;</i>
         <h1 class="mg-chat-header-wrap-title">聊天</h1>
       </div>
     </div>

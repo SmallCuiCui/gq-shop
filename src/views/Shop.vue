@@ -26,7 +26,7 @@
 		v-for="item in cateList"
 		:key="item.sort"
 		class="gq-shop-cate-item"
-		:to="{path: '/listdtail',query: {title: item.title, link: item.link}}"
+		:to="{name:'listdtail',query: {headerTitle: item.title},params: {headerTitle: item.title, link: item.link}}"
 		>
 		<div class="gq-shop-cate-item_img">
 			<img :src="item.image">

@@ -104,7 +104,7 @@
 			>
 			 <div class="gq-detail-selBox-popup-shopInfo">
 			 	<div class="gq-detail-selBox-popup-shopInfo_img">
-			 		<img src="https://s11.mogucdn.com/mlcdn/c45406/190421_1dh69292fk8fj2e15ee85486edgfc_640x960.jpg_128x999.jpg">
+			 		<img :src="detailData.imgList[0].url">
 			 	</div>
 			 	<div class="gq-detail-selBox-popup-shopInfo_price">
 			 		<h4><span>￥</span>{{detailData.price | tofix2}}</h4>
@@ -219,7 +219,6 @@ export default {
 	created () {
 		this.$http.getDetail().then(resp => {
 			this.detailData = resp.res_body
-			// console.log(this.detailData)
 			this.$nextTick().then(() => {
         new Swiper('.swiper-container', {
           autoplay: true,
@@ -245,17 +244,20 @@ export default {
 			this.showSelect = false
 			Toast('加入购物车成功');
 			this.addCartById({
-				 	id: this.detailData.id,
-				 	num: this.addNum,
-				 	img: this.detailData.imgList[0].url,
-				 	title: this.detailData.title,
-				 	price: this.detailData.price,
-				 	originPrice: this.detailData.originPrice,
-				 	cartType1: this.detailData.typeNameList[0].typeName,
-				 	cartType1Val: this.cartType1,
-				 	cartType2: this.detailData.typeNameList[1].typeName,
-				 	cartType2Val: this.cartType2
-				 })
+			 	id: this.detailData.id,
+			 	shopId: this.detailData.shopId,
+			 	num: this.addNum,
+			 	checked: false,
+			 	img: this.detailData.imgList[0].url,
+			 	title: this.detailData.title,
+			 	shopName: this.detailData.shopName,
+			 	price: this.detailData.price,
+			 	originPrice: this.detailData.originPrice,
+			 	cartType1: this.detailData.typeNameList[0].typeName,
+			 	cartType1Val: this.cartType1,
+			 	cartType2: this.detailData.typeNameList[1].typeName,
+			 	cartType2Val: this.cartType2
+			})
 		}
 	}
 }

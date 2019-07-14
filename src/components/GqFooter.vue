@@ -56,9 +56,9 @@ $activeColor: rgb(255, 87, 119);
     .qg-footer-item{
       flex: 1;
       height: 54px;
-      line-height: 54px;
+      line-height: 50px;
       text-align: center;
-      font-size: 18px;
+      font-size: 16px;
     }
   }
 }
